@@ -1,15 +1,17 @@
 package com.cl.nv1.SparseArr;
 
 import org.junit.jupiter.api.Test;
-
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author 陈龙
  * @description 实现压缩数组 使用稀疏数组 来对二维数组进行压缩然后进行持久化存储 以围棋游戏封盘 重开盘为例
  */
 public class cheseToSparseArr {
-    public static final String FILE_PATH = "D:\\test\\test.txt";
+    public static final String FILE_PATH = "E:\\test\\test.txt";
     @Test
     public void cheseToSpa(){
         //展示 将棋盘转换成的二维数组
@@ -77,4 +79,45 @@ public class cheseToSparseArr {
         }
         System.out.println("文件写入完成......");
     }
+    @Test
+    public void spaToChese() throws IOException {
+        String str = null;
+        int count = -1;
+        Path path = Paths.get(FILE_PATH);
+        long num = Files.lines(path).count();
+        System.out.println(num);
+        int[][] spa = new int[(int) num][3];
+            //读取文件将文件中数据写入数组
+            File file = new File(FILE_PATH);
+            FileInputStream fis = new FileInputStream(file);
+            InputStreamReader ir = new InputStreamReader(fis);
+            BufferedReader bw = new BufferedReader(ir);
+            while ((str =bw.readLine())!=null){
+              String[] strings =  str.split("\t");
+              count++;
+                for (int i = 0; i < strings.length; i++) {
+                    spa[count][i] = Integer.parseInt(strings[i]);
+                }
+            }
+          //遍历稀疏数组
+        for (int i = 0; i < num; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%d\t",spa[i][j]);
+            }
+            System.out.println();
+        }
+        //将稀疏数组转化为原二维数组
+        int[][] ints = new int[(spa[0][0])][(spa[0][1])];
+        for (int i = 1; i < num; i++) {
+                ints[(spa[i][0])][(spa[i][1])] = spa[i][2];
+        }
+        //遍历转化后的二维数组
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 11; j++) {
+                System.out.printf("%d\t",ints[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
 }
